@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class StoresResponseDto {
+public class StoresResponseDto implements Comparable<StoresResponseDto>{
 
     private String name;
     private String description;
@@ -30,5 +30,10 @@ public class StoresResponseDto {
                 .level(store.getLevel())
                 .businessStatus(status)
                 .build();
+    }
+
+    @Override
+    public int compareTo(StoresResponseDto o) {
+        return this.level - o.getLevel();
     }
 }

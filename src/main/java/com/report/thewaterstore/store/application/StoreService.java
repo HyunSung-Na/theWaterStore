@@ -8,9 +8,7 @@ import com.report.thewaterstore.store.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -76,7 +74,7 @@ public class StoreService {
                     }
                     responseDtoList.add(new StoresResponseDto().of(it, status));
                 });
-
+        Collections.sort(responseDtoList);
         return responseDtoList;
     }
 
