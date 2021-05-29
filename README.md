@@ -75,3 +75,175 @@ alter table holiday_time
 
 ```
 
+
+# the Water Store API Guide
+
+
+
+#### 가게 등록 API
+
+```http
+POST /api/store HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Accept: application/json
+Content-Length: 603
+Host: localhost:8080
+
+[requestbody example]
+
+{
+  "name" : "물고기수산",
+  "owner" : "인어",
+  "description" : "제일 맛있는 집",
+  "level" : 1,
+  "address" : "인천시 서구",
+  "phoneNumber" : "010-9985-4937",
+  "businessTimes" : [ {
+    "day" : "Monday",
+    "open" : "09:00",
+    "close" : "18:00"
+  }, {
+    "day" : "Tuesday",
+    "open" : "09:00",
+    "close" : "18:00"
+  }, {
+    "day" : "Wednesday",
+    "open" : "09:00",
+    "close" : "18:00"
+  }, {
+    "day" : "Thursday",
+    "open" : "09:00",
+    "close" : "18:00"
+  }, {
+    "day" : "Friday",
+    "open" : "09:00",
+    "close" : "18:00"
+  } ]
+}
+
+
+[response]
+
+HTTP/1.1 201 Created
+Location: /api/store/5
+```
+
+
+
+#### 가게 휴일 등록 API
+
+```http
+POST /api/store/addHoliday HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Accept: application/json
+Content-Length: 64
+Host: localhost:8080
+
+[requestbody example]
+
+{
+  "id" : 1,
+  "holidays" : [ "2021-05-29", "2021-05-30" ]
+}
+
+
+[response]
+
+HTTP/1.1 204 No Content
+```
+
+
+
+
+
+#### 가게 상세 정보 조회 API
+
+- BusinessTimes에 없는 요일은 HOLIDAY로 하고 open, close time은 25시와 26시로 가정하여 입력하였습니다.
+
+```http
+GET /api/store/{storeId} HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Accept: application/json
+Host: localhost:8080
+
+
+[response]
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 506
+
+{
+  "id" : 1,
+  "name" : "물고기수산",
+  "description" : "제일 맛있는 집",
+  "level" : 1,
+  "address" : "인천시 서구",
+  "phone" : "010-9985-4937",
+  "businessDays" : [ {
+    "day" : "Saturday",
+    "open" : "25:00",
+    "close" : "26:00",
+    "status" : "HOLIDAY"
+  }, {
+    "day" : "Sunday",
+    "open" : "25:00",
+    "close" : "26:00",
+    "status" : "HOLIDAY"
+  }, {
+    "day" : "Monday",
+    "open" : "09:00",
+    "close" : "18:00",
+    "status" : "OPEN"
+  } ]
+}
+```
+
+
+
+
+
+#### 가게 목록 조회 API
+
+```http
+GET /api/store HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Accept: application/json
+Host: localhost:8080
+
+
+[response]
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 254
+
+[ {
+  "name" : "물고기수산",
+  "description" : "제일 맛있는 집",
+  "level" : 1,
+  "businessStatus" : "CLOSE"
+}, {
+  "name" : "물고기수산",
+  "description" : "제일 맛있는 집",
+  "level" : 1,
+  "businessStatus" : "CLOSE"
+} ]
+```
+
+
+
+#### 가게 삭제 API
+
+```http
+DELETE /api/store/{storeId} HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Accept: application/json
+Host: localhost:8080
+
+[response]
+
+HTTP/1.1 204 No Content
+```
+
+
