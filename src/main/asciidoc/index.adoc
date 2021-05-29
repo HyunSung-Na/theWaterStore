@@ -1,0 +1,35 @@
+= the Water Store API Guide
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectnums:
+:sectlinks:
+:sectanchors:
+
+[[api]]
+== Store Api
+
+
+가게 등록 API
+
+include::{snippets}/store-generate-success/http-request.adoc[]
+include::{snippets}/store-generate-success/http-response.adoc[]
+
+
+가게 휴일 등록 API
+include::{snippets}/store-add-Holiday/http-request.adoc[]
+include::{snippets}/store-add-Holiday/http-response.adoc[]
+
+가게 상세 정보 조회 API
+include::{snippets}/store-findDetail-success/http-request.adoc[]
+include::{snippets}/store-findDetail-success/http-response.adoc[]
+
+가게 목록 조회 API
+include::{snippets}/findAllStores-success/http-request.adoc[]
+include::{snippets}/findAllStores-success/http-response.adoc[]
+
+가게 삭제 API
+include::{snippets}/store-delete-success/http-request.adoc[]
+include::{snippets}/store-delete-success/http-response.adoc[]

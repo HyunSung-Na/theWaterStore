@@ -10,10 +10,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +24,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.report.thewaterstore.util.ApiDocumentUtils.getDocumentRequest;
+import static com.report.thewaterstore.util.ApiDocumentUtils.getDocumentResponse;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,6 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@AutoConfigureRestDocs
 public class StoreRestControllerTest {
 
     @Autowired
@@ -60,6 +70,20 @@ public class StoreRestControllerTest {
                 .content(new ObjectMapper().writeValueAsString(storeCreateDto)))
                 .andExpect(status().is(201))
                 .andDo(print())
+                .andDo(document("store-generate-success",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        requestFields(
+                                fieldWithPath("name").description("가게 이름"),
+                                fieldWithPath("owner").description("사장님 성함"),
+                                fieldWithPath("description").description("가게 설명"),
+                                fieldWithPath("level").description("등급"),
+                                fieldWithPath("address").description("주소"),
+                                fieldWithPath("phoneNumber").description("가게 전화"),
+                                fieldWithPath("businessTimes.[].day").description("영업 요일"),
+                                fieldWithPath("businessTimes.[].open").description("영업 오픈시간"),
+                                fieldWithPath("businessTimes.[].close").description("영업 마감시간")
+                        )))
                 .andReturn();
 
         //then
@@ -82,6 +106,13 @@ public class StoreRestControllerTest {
                 .content(new ObjectMapper().writeValueAsString(createHolidayDto)))
                 .andExpect(status().is(204))
                 .andDo(print())
+                .andDo(document("store-add-Holiday",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        requestFields(
+                                fieldWithPath("id").description("가게 id"),
+                                fieldWithPath("holidays.[]").description("가게 휴일")
+                        )))
                 .andReturn();
     }
 
@@ -95,6 +126,21 @@ public class StoreRestControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200))
                 .andDo(print())
+                .andDo(document("store-findDetail-success",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        responseFields(
+                                fieldWithPath("id").description("가게 id"),
+                                fieldWithPath("name").description("가게 이름"),
+                                fieldWithPath("description").description("가게 설명"),
+                                fieldWithPath("level").description("등급"),
+                                fieldWithPath("address").description("주소"),
+                                fieldWithPath("phone").description("가게 전화"),
+                                fieldWithPath("businessDays.[].day").description("영업 요일"),
+                                fieldWithPath("businessDays.[].open").description("영업 오픈시간"),
+                                fieldWithPath("businessDays.[].close").description("영업 마감시간"),
+                                fieldWithPath("businessDays.[].status").description("현재 영업 상태")
+                        )))
                 .andReturn();
     }
 
@@ -110,6 +156,15 @@ public class StoreRestControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200))
                 .andDo(print())
+                .andDo(document("findAllStores-success",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        responseFields(
+                                fieldWithPath("[].name").description("가게 이름"),
+                                fieldWithPath("[].description").description("가게 설명"),
+                                fieldWithPath("[].level").description("가게 등급"),
+                                fieldWithPath("[].businessStatus").description("현재 영업 상태")
+                        )))
                 .andReturn();
     }
 
@@ -123,6 +178,9 @@ public class StoreRestControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(204))
                 .andDo(print())
+                .andDo(document("store-delete-success",
+                        getDocumentRequest(),
+                        getDocumentResponse()))
                 .andReturn();
     }
 
